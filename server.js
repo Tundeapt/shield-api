@@ -51,7 +51,7 @@ app.get("/api/state", async (req, res) => {
     const { data, error } = await supabase
       .from("shield_state")
       .select("*")
-      .order("timestamp", { ascending: false })
+      .order("id", { ascending: false })
       .limit(1);
 
     if (error) {
