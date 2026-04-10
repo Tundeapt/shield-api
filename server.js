@@ -69,7 +69,7 @@ app.post('/api/claim', async (req, res) => {
   }
 
   // CASE B: Same session reattach
-  if (row.current_mt5_id === mt5_id) {
+  if (row.current_mt5_id == mt5_id) {
     await supabase.from('licenses').update({
       last_heartbeat_at: new Date().toISOString(),
       pending_mt5_id: null
@@ -154,7 +154,7 @@ app.post('/api/heartbeat', async (req, res) => {
 
   if (error || !row) return res.status(401).json({ error: 'invalid_key' });
   if (row.status !== 'active') return res.status(403).json({ error: row.status });
-  if (row.current_mt5_id !== p.mt5_id) {
+  if (row.current_mt5_id != p.mt5_id) {
     await supabase.from('license_events').insert({
       license_key: p.license_key, event_type: 'HEARTBEAT_REJECTED',
       from_mt5_id: p.mt5_id, to_mt5_id: row.current_mt5_id,
