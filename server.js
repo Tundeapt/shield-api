@@ -73,7 +73,7 @@ if (error) {
   }
 
   // CASE B: Same session reattach
-if (String(row.current_mt5_id) === String(mt5_id)) {
+if (row.current_mt5_id && String(row.current_mt5_id) === String(mt5_id)) {
     await supabase.from('licenses').update({
       last_heartbeat_at: new Date().toISOString(),
       pending_mt5_id: null
