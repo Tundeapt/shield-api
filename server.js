@@ -145,6 +145,7 @@ app.post('/api/claim', async (req, res) => {
 
 app.post('/api/heartbeat', async (req, res) => {
   const p = req.body;
+  console.log("HEARTBEAT IS SENDING KEY:", p.license_key, "ID:", p.mt5_id);
   if (!p.license_key || !p.mt5_id) {
     return res.status(400).json({ error: 'missing fields' });
   }
