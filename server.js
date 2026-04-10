@@ -31,6 +31,7 @@ app.post('/api/claim', async (req, res) => {
 
   const { data: row, error } = await supabase
     .from('licenses').select('*').eq('license_key', license_key).single();
+  console.log("DB FOUND:", row, "DB ERROR:", error);
 
   if (error || !row) {
     return res.status(401).json({ error: 'invalid_key' });
