@@ -200,13 +200,13 @@ if (String(row.current_mt5_id) !== String(p.mt5_id)) {
 
 app.get('/api/state', async (req, res) => {
   const license_key = req.query.license_key || req.query.key;
-  const { key, email } = req.query;
-  if (!key && !email) return res.status(400).json({ error: 'missing key or email' });
+  const { email } = req.query;
+  if (!license_key && !email) return res.status(400).json({ error: 'missing key or email' });
 
   const sel = `license_id, license_key, customer_email, customer_name, current_mt5_id, plan, status, pending_mt5_id, shield_state(*)`;
   let q = supabase.from('licenses').select(sel).eq('status', 'active');
   if (email) q = q.eq('customer_email', email).order('created_at', { ascending: true });
-  else q = q.eq('license_key', key).limit(1);
+  else q = q.eq('license_key', license_key).limit(1);
 
   const { data, error } = await q;
   if (error) return res.status(500).json({ error: 'db_error' });
