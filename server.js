@@ -199,6 +199,7 @@ if (String(row.current_mt5_id) !== String(p.mt5_id)) {
 });
 
 app.get('/api/state', async (req, res) => {
+  const license_key = req.query.license_key || req.query.key;
   const { key, email } = req.query;
   if (!key && !email) return res.status(400).json({ error: 'missing key or email' });
 
