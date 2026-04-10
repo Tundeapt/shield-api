@@ -175,7 +175,7 @@ if (String(row.current_mt5_id) !== String(p.mt5_id)) {
     last_heartbeat_at: new Date().toISOString()
   }).eq('license_id', row.license_id);
 
-  await supabase.from('shield_state').upsert({
+ const { error: stateError } = await supabase.from('shield_state').upsert({
     license_key: p.license_key,
     mt5_id: p.mt5_id,
     profile: p.profile,
@@ -190,6 +190,10 @@ if (String(row.current_mt5_id) !== String(p.mt5_id)) {
     last_trigger: p.last_trigger, timestamp: p.timestamp,
     updated_at: new Date().toISOString()
   }, { onConflict: 'license_key' });
+
+  if (stateError) {
+    console.error("UPSERT REJECTED:", stateError);
+  }
 
   return res.json({ status: 'ok' });
 });
