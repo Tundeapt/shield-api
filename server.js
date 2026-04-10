@@ -204,4 +204,4 @@ app.get('/api/state', async (req, res) => {
   return res.json(flat);
 });
 
-app.listen(process.env.PORT || 8080);
+app.listen(process.env.PORT || 3000);
