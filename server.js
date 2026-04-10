@@ -28,14 +28,18 @@ app.post('/api/claim', async (req, res) => {
   if (!license_key || !mt5_id) {
     return res.status(400).json({ error: 'missing fields' });
   }
+  license_key = String(license_key).trim();  
+  mt5_id = String(mt5_id).trim();
 
-  const { data: row, error } = await supabase
-    .from('licenses').select('*').eq('license_key', license_key).single();
-  console.log("DB FOUND:", row, "DB ERROR:", error);
+ const { data: row, error } = await supabase
+  .from('licenses').select('*').eq('license_key', license_key).single();
 
-  if (!row) {
-    return res.status(401).json({ error: '36invalid_key' });
-  }
+if (!row) {
+  return res.status(401).json({ error: 'invalid_key' });
+}
+if (error) {
+  console.warn('Supabase warning on licenses lookup:', error);
+}
 
   if (row.status !== 'active') {
     return res.status(403).json({ error: row.status });
@@ -69,7 +73,7 @@ app.post('/api/claim', async (req, res) => {
   }
 
   // CASE B: Same session reattach
-  if (row.current_mt5_id == mt5_id) {
+if (String(row.current_mt5_id) === String(mt5_id)) {
     await supabase.from('licenses').update({
       last_heartbeat_at: new Date().toISOString(),
       pending_mt5_id: null
@@ -149,13 +153,16 @@ app.post('/api/heartbeat', async (req, res) => {
   if (!p.license_key || !p.mt5_id) {
     return res.status(400).json({ error: 'missing fields' });
   }
+  p.license_key = String(p.license_key).trim();   
+  p.mt5_id = String(p.mt5_id).trim();           
 
   const { data: row, error } = await supabase
-    .from('licenses').select('*').eq('license_key', p.license_key).single();
+  .from('licenses').select('*').eq('license_key', p.license_key).single();
 
-  if (!row) return res.status(401).json({ error: '155invalid_key' });
+if (!row) return res.status(401).json({ error: 'invalid_key' });
+if (error) console.warn('Supabase warning on heartbeat lookup:', error);
   if (row.status !== 'active') return res.status(403).json({ error: row.status });
-  if (row.current_mt5_id != p.mt5_id) {
+if (String(row.current_mt5_id) !== String(p.mt5_id)) {
     await supabase.from('license_events').insert({
       license_key: p.license_key, event_type: 'HEARTBEAT_REJECTED',
       from_mt5_id: p.mt5_id, to_mt5_id: row.current_mt5_id,
