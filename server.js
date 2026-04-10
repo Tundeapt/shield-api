@@ -23,8 +23,8 @@ app.use((req, res, next) => {
 });
 
 app.post('/api/claim', async (req, res) => {
+   const { license_key, mt5_id } = req.body;
   console.log("EA IS SENDING KEY:", license_key, "MT5 ID:", mt5_id);
-  const { license_key, mt5_id } = req.body;
   if (!license_key || !mt5_id) {
     return res.status(400).json({ error: 'missing fields' });
   }
