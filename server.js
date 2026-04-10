@@ -34,7 +34,7 @@ app.post('/api/claim', async (req, res) => {
   console.log("DB FOUND:", row, "DB ERROR:", error);
 
   if (!row) {
-    return res.status(401).json({ error: 'invalid_key' });
+    return res.status(401).json({ error:36 'invalid_key' });
   }
 
   if (row.status !== 'active') {
@@ -152,7 +152,7 @@ app.post('/api/heartbeat', async (req, res) => {
   const { data: row, error } = await supabase
     .from('licenses').select('*').eq('license_key', p.license_key).single();
 
-  if (!row) return res.status(401).json({ error: 'invalid_key' });
+  if (!row) return res.status(401).json({ error:155 'invalid_key' });
   if (row.status !== 'active') return res.status(403).json({ error: row.status });
   if (row.current_mt5_id != p.mt5_id) {
     await supabase.from('license_events').insert({
